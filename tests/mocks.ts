@@ -71,8 +71,13 @@ import type {
   RunnerResult,
 } from '../src/third_party/index.js';
 
+export type MockPuppeteerPage = sinon.SinonStubbedInstance<Page> & {
+  webmcp: sinon.SinonStubbedInstance<WebMCP>;
+  tracing: sinon.SinonStubbedInstance<Tracing>;
+};
+
 export type MockMcpPage = sinon.SinonStubbedInstance<McpPage> & {
-  pptrPage: sinon.SinonStubbedInstance<Page>;
+  pptrPage: MockPuppeteerPage;
   target: sinon.SinonStubbedInstance<MockTarget>;
 };
 export type MockMcpContext = sinon.SinonStubbedInstance<McpContext>;
@@ -216,10 +221,7 @@ export function createMockCDPSession(): sinon.SinonStubbedInstance<MockCDPSessio
   return session;
 }
 
-export function createMockPuppeteerPage(): sinon.SinonStubbedInstance<Page> & {
-  webmcp: sinon.SinonStubbedInstance<WebMCP>;
-  tracing: sinon.SinonStubbedInstance<Tracing>;
-} {
+export function createMockPuppeteerPage(): MockPuppeteerPage {
   const page = sinon.createStubInstance(
     CdpPage,
   ) as unknown as sinon.SinonStubbedInstance<Page>;
@@ -367,7 +369,7 @@ export function createMockPuppeteerTarget(
 
 export function createMockMcpPage(
   options: {
-    pptrPage?: sinon.SinonStubbedInstance<Page>;
+    pptrPage?: MockPuppeteerPage;
     target?: sinon.SinonStubbedInstance<MockTarget>;
   } = {},
 ): MockMcpPage {
